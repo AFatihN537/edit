@@ -16,7 +16,7 @@ jobs:
   build:
     name: Build Release
     # Gunakan runner Ubuntu versi terbaru
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       # Langkah 1: Clone repository ke dalam runner
