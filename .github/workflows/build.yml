@@ -1,4 +1,4 @@
-name: Rust Nightly Build
+name: Build
 
 # Pemicu workflow
 on:
@@ -29,6 +29,7 @@ jobs:
         uses: dtolnay/rust-toolchain@nightly
         with:
           toolchain: nightly
+          components: rust-src
 
       # Langkah Bonus: Cache dependensi untuk mempercepat build selanjutnya
       - name: Cache dependencies
