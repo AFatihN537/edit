@@ -1,0 +1,49 @@
+name: Rust Nightly Build
+
+# Pemicu workflow
+on:
+  # Jalankan saat ada push ke branch 'main'
+  push:
+    branches: [ "main" ]
+  # Izinkan untuk dijalankan secara manual dari tab Actions di GitHub
+  workflow_dispatch:
+
+# Variabel lingkungan untuk semua job
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: Build Release
+    # Gunakan runner Ubuntu versi terbaru
+    runs-on: ubuntu-latest
+
+    steps:
+      # Langkah 1: Clone repository ke dalam runner
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Langkah 2: Install Rust toolchain versi nightly
+      # Action ini adalah cara yang lebih modern dan direkomendasikan daripada 'rustup'.
+      - name: Install Rust Nightly toolchain
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          toolchain: nightly
+
+      # Langkah Bonus: Cache dependensi untuk mempercepat build selanjutnya
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2
+
+      # Langkah 3: Jalankan perintah build untuk rilis
+      - name: Build for release
+        run: cargo build --config .cargo/release.toml --release
+
+      # Langkah 4: Upload hasil build sebagai artifact
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          # Nama artifact yang akan muncul di halaman rangkuman workflow
+          name: release-build
+          # Path ke direktori yang akan di-upload.
+          # Ini akan meng-upload semua file dari direktori 'target/release/'.
+          path: target/release/
